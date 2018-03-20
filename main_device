@@ -1,0 +1,164 @@
+#include <PinChangeInt.h>
+#include <eHealth.h>
+
+String readString;
+
+void setup() {
+  
+  Serial.begin(115200);  
+//  Serial.println("Menu :");
+//  Serial.println("1) Analyze Body Temperature ");
+//  Serial.println("2) Get ECG graph ");
+//  Serial.println("3) Get EMG graph ");
+//  Serial.println("4) Get GSR graph ");
+//  Serial.println("5) Get AirFlow ");
+//  Serial.println("6) Exit ");
+//  
+}
+
+void loop() {
+  
+  
+  while (Serial.available())
+  {
+    if (Serial.available() >0)
+    {
+      readString = "";
+      char c = Serial.read();  //gets one byte from serial buffer
+      readString += c; //makes the string readString
+      Serial.flush();     
+    } 
+   
+  }
+  
+  if(readString == "1")
+  {
+  get_temp();
+  Serial.println("");
+  Serial.flush();
+  delay(3000);	
+  }
+  if(readString == "2")
+  {
+  get_ecg();
+  Serial.println("");
+  delay(3000);	
+  Serial.flush();
+  }
+  if(readString == "3")
+  {
+  get_emg();
+  Serial.println("");
+  delay(3000);	
+  Serial.flush();
+  }
+  if(readString == "4")
+  {
+  get_con();
+  Serial.println("");
+  delay(3000);	
+  Serial.flush();
+
+  }
+  if(readString == "5")
+  {
+ get_res();
+  Serial.println("");
+  delay(3000);	
+  Serial.flush();
+  }
+  if(readString == "6")
+  {
+get_cv();
+  Serial.println("");
+  delay(3000);	
+  Serial.flush();
+
+  }
+  
+//  if(readString == "5")
+//  {
+//  Serial.println(""); 
+//  get_ariflow();
+//  
+//  
+//  Serial.flush();
+//  }
+  if(readString == "6")
+  {
+   exit(0); 
+  }
+  
+}
+//get body temperature average of 10
+void get_temp()
+{
+  float temperature = eHealth.getTemperature();
+  Serial.print("T:"); 
+  Serial.print(temperature);  
+}
+
+void get_ecg()
+{
+  float ECG = eHealth.getECG();
+  Serial.print("E:"); 
+  Serial.print(ECG, 2); 
+}
+void get_emg()
+{
+  int EMG = eHealth.getEMG();
+  Serial.print("M:"); 
+ Serial.print(EMG);  
+}
+
+void get_con()
+{
+    float conductance = eHealth.getSkinConductance();
+    Serial.print("C:");       
+    Serial.print(conductance, 2);  
+}
+
+void get_res()
+{
+    float resistance = eHealth.getSkinResistance();
+    Serial.print("R:");       
+    Serial.print(resistance, 2);  
+}
+
+void get_cv()
+{
+    float conductanceVol = eHealth.getSkinConductanceVoltage();
+    Serial.print("CV:");       
+    Serial.print(conductanceVol, 4);  
+}
+
+void get_gsr()
+{
+  
+ float conductance = eHealth.getSkinConductance();
+ float resistance = eHealth.getSkinResistance();
+ float conductanceVol = eHealth.getSkinConductanceVoltage();
+ 
+ Serial.print("Conducance                   : ");       
+ Serial.print(conductance, 2);  
+ Serial.println("");         
+
+ Serial.print("Resistance                    : ");       
+ Serial.print(resistance, 2);  
+ Serial.println("");    
+
+ Serial.print("Conductance Voltage           : ");       
+ Serial.print(conductanceVol, 4);  
+ Serial.println("");
+
+}
+
+void get_ariflow()
+{
+  int air = eHealth.getAirFlow();   
+  eHealth.airFlowWave(air);
+  
+}
+
+
+
